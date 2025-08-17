@@ -1,22 +1,20 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 
-Route::redirect('/', '/products'); // opsional: arahkan home ke products
+// Opsional: arahkan root ke /products (akan kena middleware auth)
+Route::redirect('/', '/products');
 
+// Semua halaman app dilindungi login
 Route::middleware('auth')->group(function () {
+    // CRUD Produk (web)
     Route::resource('products', ProductController::class);
 
-     Route::get('/dashboard', function () {
-        return redirect()->route('products.index');
-    })->name('dashboard');
-
+    // CRUD Kategori (web) - tanpa halaman show
     Route::resource('categories', CategoryController::class)->except(['show']);
 });
 
-// route auth (dari Breeze)
+// Route bawaan Breeze (login/register/password dll)
 require __DIR__.'/auth.php';
-
